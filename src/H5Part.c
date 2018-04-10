@@ -246,10 +246,15 @@ _H5Part_open_file (
 		/* select the HDF5 VFD */
 		if (flags & H5PART_VFD_MPIPOSIX) {
 			_H5Part_print_info ( "Selecting MPI-POSIX VFD" );
+#if 0 /* H5Pset_fapl_mpiposix OBSOLETE, removed from hdf5 1.8.13 */
 			if (H5Pset_fapl_mpiposix ( f->access_prop, comm, 0 ) < 0) {
 				HANDLE_H5P_SET_FAPL_ERR;
 				goto error_cleanup;
 			}
+#else
+			HANDLE_H5P_SET_FAPL_ERR;
+			goto error_cleanup;
+#endif
 		} else if (flags & H5PART_VFD_CORE) {
 			_H5Part_print_info ( "Selecting CORE VFD" );
 			if (H5Pset_fapl_core ( f->access_prop, align, 1 ) < 0) {
