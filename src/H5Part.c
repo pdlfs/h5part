@@ -2097,7 +2097,8 @@ _H5Part_iteration_operator2 (
     case H5L_TYPE_HARD: {
 
       H5O_info_t objinfo;
-      if( H5Oget_info_by_name( group_id, member_name, &objinfo, H5P_DEFAULT ) < 0 ) {
+      if( H5Oget_info_by_name( group_id, member_name,
+                               &objinfo, H5O_INFO_BASIC, H5P_DEFAULT ) < 0 ) {
 	return (herr_t)HANDLE_H5G_GET_OBJINFO_ERR ( member_name );
       }
 
@@ -2147,7 +2148,7 @@ _H5Part_iteration_operator2 (
           if ( obj_id < 0 ) {
 	    return (herr_t)HANDLE_H5G_OPEN_ERR ( member_name );
           }
-          else if ( H5Oget_info ( obj_id, &objinfo ) < 0 ) {
+          else if ( H5Oget_info ( obj_id, &objinfo, H5O_INFO_BASIC ) < 0 ) {
 	    return (herr_t)HANDLE_H5G_GET_OBJINFO_ERR ( member_name );
           }
           else {
@@ -2212,7 +2213,7 @@ _H5Part_iteration_operator (
 		if ( obj_id < 0 )
 			return (herr_t)HANDLE_H5G_OPEN_ERR ( member_name );
 
-		herr = H5Oget_info ( obj_id, &objinfo );
+		herr = H5Oget_info ( obj_id, &objinfo, H5O_INFO_BASIC );
 		if ( herr < 0 )
 			return (herr_t)HANDLE_H5G_GET_OBJINFO_ERR ( member_name );
 
