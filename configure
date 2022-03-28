@@ -18352,7 +18352,18 @@ fi
 
 INCLUDES="$INCLUDES -I$HDF5ROOT/include"
 LDFLAGS="$LDFLAGS -L$HDF5ROOT/lib"
-LIBS="$LIBS -lhdf5"
+
+if test ! -f "$HDF5ROOT/lib/libhdf5.so" -a ! -f "$HDF5ROOT/lib/libhdf5.a" -a \
+    \( -f "$HDF5ROOT/lib/libhdf5_debug.so" -o \
+       -f "$HDF5ROOT/lib/libhdf5_debug.a" \) ; then
+
+  LIBS="$LIBS -lhdf5_debug"
+
+else
+
+  LIBS="$LIBS -lhdf5"
+
+fi
 
 { echo "$as_me:$LINENO: checking if we need to link to libsz " >&5
 echo $ECHO_N "checking if we need to link to libsz ... $ECHO_C" >&6; }

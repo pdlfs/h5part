@@ -273,7 +273,18 @@ fi
 
 INCLUDES="$INCLUDES -I$HDF5ROOT/include"
 LDFLAGS="$LDFLAGS -L$HDF5ROOT/lib"
-LIBS="$LIBS -lhdf5"
+
+if test ! -f "$HDF5ROOT/lib/libhdf5.so" -a ! -f "$HDF5ROOT/lib/libhdf5.a" -a \
+    \( -f "$HDF5ROOT/lib/libhdf5_debug.so" -o \
+       -f "$HDF5ROOT/lib/libhdf5_debug.a" \) ; then
+
+  LIBS="$LIBS -lhdf5_debug"
+
+else
+
+  LIBS="$LIBS -lhdf5"
+
+fi
 
 AC_MSG_CHECKING([if we need to link to libsz ])
 if test -n "$HDF5ROOT"; then
