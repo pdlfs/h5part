@@ -467,11 +467,19 @@ void test_read3(void)
 
 	h5part_int64_t status;
 
+#ifdef H5PART_VFD_MPIPOSIX
 	TEST(	"Opening file once, read-only, lustre filesystem, "
 		"MPI-POSIX VFD, 64KB alignment");
 	file1 = OPENALIGN(FILENAME,
 		H5PART_READ | H5PART_VFD_MPIPOSIX | H5PART_FS_LUSTRE,
 		65536);
+#else
+	TEST(	"Opening file once, read-only, lustre filesystem, "
+		"MPI VFD (default), 64KB alignment");
+	file1 = OPENALIGN(FILENAME,
+		H5PART_READ | H5PART_FS_LUSTRE,
+		65536);
+#endif
 	test_is_valid(file1);
 
 	TEST("Redefining step name");

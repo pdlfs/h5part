@@ -407,11 +407,19 @@ void test_write3(void)
 
 	h5part_int64_t status;
 
+#ifdef H5PART_VFD_MPIPOSIX
 	TEST(	"Opening file once, write-truncate, lustre filesyste, "
 		"MPI-POSIX VFD, 1KB alignment");
 	file1 = OPENALIGN(FILENAME,
 		H5PART_WRITE | H5PART_VFD_MPIPOSIX | H5PART_FS_LUSTRE,
 		1024);
+#else
+	TEST(	"Opening file once, write-truncate, lustre filesyste, "
+		"MPI VFD (default), 1KB alignment");
+	file1 = OPENALIGN(FILENAME,
+		H5PART_WRITE | H5PART_FS_LUSTRE,
+		1024);
+#endif
 	test_is_valid(file1);
 
 	TEST("Redefining step name");

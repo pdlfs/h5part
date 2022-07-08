@@ -59,7 +59,9 @@ void print_usage ()
     printf (" -v\tverbosity level\n");
     printf (" -w\tpreform write test\n");
     printf (" -lustre\tenable lustre-specific tuning\n");
+#ifdef H5PART_VFD_MPIPOSIX
     printf (" -posix\tuse the MPI-POSIX VFD\n");
+#endif
 }
 
 void parse_args (int argc, char** argv, Params* p)
@@ -152,7 +154,14 @@ void parse_args (int argc, char** argv, Params* p)
         }
         else if (strcmp(argv[i],"-posix") == 0)
         {
+#ifdef H5PART_VFD_MPIPOSIX
             p->flags |= H5PART_VFD_MPIPOSIX;
+#else
+	    if (p->rank == 0)
+	        fprintf(stderr, "HDF5 >= 1.8.13 does not support -posix\n");
+            MPI_Finalize();
+            exit (EXIT_SUCCESS);
+#endif
         }
         // print usage
         else if (strcmp(argv[i],"--help") == 0)

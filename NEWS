@@ -119,7 +119,7 @@ H5PART_APPEND, and these were mutually exclusive. Additional flags have been
 added to select the underlying virtual file driver (VFD) that HDF5 uses in
 parallel mode and to accommodate the lustre filesystem:
 
-H5PART_VFD_MPIPOSIX (use the MPI-POSIX driver, which bypasses MPI-IO)
+H5PART_VFD_MPIPOSIX (use the OBSOLETE MPI-POSIX driver, which bypasses MPI-IO)
 H5PART_VFD_MPIIO_IND (use MPI-IO in independent mode)
 H5PART_FS_LUSTRE (activate H5P tunings for the lustre stripe size)
 
@@ -128,6 +128,10 @@ These flags can be specified using the typical bitwise OR method, e.g.
   char flag = H5PART_WRITE | H5PART_VFD_MPIPOSIX | H5PART_FS_LUSTRE;
 
 will select write mode with these two additional options.
+
+Note that the HDF5 API that supported H5PART_VFD_MPIPOSIX was removed
+from hdf5 version 1.8.13.  Thus H5Part no longer supports the
+H5PART_VFD_MPIPOSIX option when newer versions of HDF5.
 
 The parallel library now defaults to using the MPI-IO collective mode driver
 (previously it used independent mode). The collective buffering algorithm in

@@ -195,9 +195,12 @@ _H5Part_flagsfor2c (
 
 	flags = strtok ( flags, "," );
 	while ( flags != NULL ) {
+#ifdef H5PART_VFD_MPIPOSIX
 		if ( strcmp ( flags, "vfd_mpiposix" ) == 0 )
 				fbits |= H5PART_VFD_MPIPOSIX;
-		else if ( strcmp ( flags, "vfd_core" ) == 0 )
+		else
+#endif
+		if ( strcmp ( flags, "vfd_core" ) == 0 )
 				fbits |= H5PART_VFD_CORE;
 		else if ( strcmp ( flags, "vfd_mpio_ind" ) == 0 )
 				fbits |= H5PART_VFD_MPIIO_IND;

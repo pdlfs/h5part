@@ -39,7 +39,15 @@ extern "C" {
 #define H5PART_READ		0x01
 #define H5PART_WRITE		0x02
 #define H5PART_APPEND		0x04
+/*
+ * H5Pset_fapl_mpiposix is OBSOLETE, removed in hdf5 2e430281 (1.8.13).
+ * only support H5PART_VFD_MPIPOSIX on older versions of hdf5.
+ */
+#if ( (H5_VERS_MAJOR < 1) ||                                                 \
+      (H5_VERS_MAJOR == 1 && H5_VERS_MINOR < 8) ||                           \
+      (H5_VERS_MAJOR == 1 && H5_VERS_MINOR == 8 && H5_VERS_RELEASE < 13) )
 #define H5PART_VFD_MPIPOSIX	0x08
+#endif
 #define H5PART_FS_LUSTRE	0x10
 #define H5PART_VFD_MPIIO_IND	0x20
 #define H5PART_VFD_CORE		0x40

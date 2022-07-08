@@ -244,18 +244,16 @@ _H5Part_open_file (
 		}
 
 		/* select the HDF5 VFD */
+#ifdef H5PART_VFD_MPIPOSIX /* H5Pset_fapl_mpiposix() removed in hdf5 1.8.13 */
 		if (flags & H5PART_VFD_MPIPOSIX) {
 			_H5Part_print_info ( "Selecting MPI-POSIX VFD" );
-#if 0 /* H5Pset_fapl_mpiposix OBSOLETE, removed from hdf5 1.8.13 */
 			if (H5Pset_fapl_mpiposix ( f->access_prop, comm, 0 ) < 0) {
 				HANDLE_H5P_SET_FAPL_ERR;
 				goto error_cleanup;
 			}
-#else
-			HANDLE_H5P_SET_FAPL_ERR;
-			goto error_cleanup;
-#endif
-		} else if (flags & H5PART_VFD_CORE) {
+		} else
+#endif /* H5PART_VFD_MPIPOSIX */
+		if (flags & H5PART_VFD_CORE) {
 			_H5Part_print_info ( "Selecting CORE VFD" );
 			if (H5Pset_fapl_core ( f->access_prop, align, 1 ) < 0) {
 				HANDLE_H5P_SET_FAPL_ERR;
@@ -389,7 +387,7 @@ _H5Part_open_file (
   - \c H5PART_APPEND - open file for writing without truncating
   - \c H5PART_READ - open file read-only
   - \c H5PART_FS_LUSTRE - enable optimizations for the Lustre file system
-  - \c H5PART_VFD_MPIPOSIX - use the HDF5 MPI-POSIX virtual file driver
+  - \c H5PART_VFD_MPIPOSIX - use OBSOLETE HDF5 MPI-POSIX virtual file driver
   - \c H5PART_VFD_MPIO_IND - use MPI-IO in indepedent mode
 
   The typical file extension is \c .h5.
@@ -429,7 +427,7 @@ H5PartOpenFileParallel (
   - \c H5PART_APPEND - open file for writing without truncating
   - \c H5PART_READ - open file read-only
   - \c H5PART_FS_LUSTRE - enable optimizations for the Lustre file system
-  - \c H5PART_VFD_MPIPOSIX - use the HDF5 MPI-POSIX virtual file driver
+  - \c H5PART_VFD_MPIPOSIX - use OBSOLETE HDF5 MPI-POSIX virtual file driver
   - \c H5PART_VFD_MPIO_IND - use MPI-IO in indepedent mode
 
   The typical file extension is \c .h5.
@@ -3445,7 +3443,7 @@ H5PartReadParticleStep (
   use independent writes from overwhelming the underlying
   parallel file system.
 
-  Throttling only works with the H5PART_VFD_MPIPOSIX or
+  Throttling only works with the OBSOLETE H5PART_VFD_MPIPOSIX or
   H5PART_VFD_MPIIO_IND drivers and is only available in
   the parallel library.
 
@@ -3461,7 +3459,11 @@ H5PartSetThrottle (
 	SET_FNAME( "H5PartSetThrottle" );
 	CHECK_FILEHANDLE ( f );
 
-	if ( f->flags & H5PART_VFD_MPIIO_IND || f->flags & H5PART_VFD_MPIPOSIX ) {
+	if ( f->flags & H5PART_VFD_MPIIO_IND
+#ifdef H5PART_VFD_MPIPOSIX
+             || f->flags & H5PART_VFD_MPIPOSIX
+#endif
+           ) {
 		f->throttle = factor;
 		_H5Part_print_info (
 			"Throttling set with factor = %d", f->throttle );
